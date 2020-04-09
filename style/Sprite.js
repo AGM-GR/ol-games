@@ -1,4 +1,4 @@
-/*	Copyright (c) 2017 Jean-Marc VIGLINO, 
+/*	Copyright (c) 2017 Jean-Marc VIGLINO,
   released under the CeCILL-B license (French BSD license)
   (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 
@@ -15,16 +15,17 @@ import ol_style_Icon from 'ol/style/Icon'
  * @param {olx.style.SpriteOptions=} options Options.
  * @extends {ol.style.Icon}
  * @api
-* @todo 
+* @todo
 */
 var ol_style_Sprite = function (options) {
   options = options || {};
-  
+
   var canvas = document.createElement('canvas');
   this.size = canvas.width = canvas.height = options.size||64;
   ol_style_Icon.call (this, {
     img: canvas,
     imgSize: [this.size, this.size],
+    opacity: options.opacity,
     scale: options.scale
   });
 

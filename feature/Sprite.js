@@ -1,4 +1,4 @@
-/*	Copyright (c) 2017 Jean-Marc VIGLINO, 
+/*	Copyright (c) 2017 Jean-Marc VIGLINO,
   released under the CeCILL-B license (French BSD license)
   (http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.txt).
 */
@@ -25,22 +25,23 @@ if (!Math.trunc) Math.trunc = function(x) { return x < 0 ? Math.ceil(x) : Math.f
  * A feature as a sprite (with a sprite style and states).
  *
  * @constructor
- * @trigger 
+ * @trigger
  * @param {olx.SpriteOptions=} options Options, extend olx.StyleSpriteOptions.
  *	- name {string} name of the sprite (to be display on top of his head)
-*	- frameRate {number} frame rate for the state 
+*	- frameRate {number} frame rate for the state
 * @extends {ol_Feature}
 * @api
-* @todo 
+* @todo
 */
 var ol_Sprite = function (options) {
   options = options || {};
-  
+
   this.coord = new ol_geom_Point(options.position || [0,0]);
   ol_Feature.call (this, this.coord);
-  
+
   this.style = new ol_style_Style({
     image: new ol_style_Sprite(options),
+    zIndex: options.zIndex,
     text: new ol_style_Text({
       font: 'bold 12px helvetica,sans-serif',
       text: options.name || "",
@@ -134,7 +135,7 @@ ol_Sprite.prototype.getBBox = function (res) {
   return [p[0]-s, p[1]-s, p[0]+s, p[1]+s];
 };
 
-/** Set sprite state and time 
+/** Set sprite state and time
 */
 ol_Sprite.prototype.setState = function (state, dt) {
   this.currentState = state;
@@ -198,10 +199,10 @@ ol_Sprite.prototype.setDirection = function (angle, speed) {
  */
 ol_Sprite.prototype.getQuarter = function () {
   switch ((Math.round(this.angle*2/Math.PI)+4)%4) {
-    case 0: return "N"; 
-    case 1: return "E"; 
-    case 2: return "S"; 
-    case 3: return "W"; 
+    case 0: return "N";
+    case 1: return "E";
+    case 2: return "S";
+    case 3: return "W";
   }
 };
 
@@ -229,10 +230,10 @@ ol_Sprite.prototype.move = function (e) {
   if (this.moving_) {
     var c = this.getCoordinate();
     var dc = [ this.speed*this.dir[0]*e.dt, this.speed*this.dir[1]*e.dt ];
-    
+
     c[0] += dc[0];
     c[1] += dc[1];
-    
+
     if (this.destination) {
       // Reach the destination
       if ( Math.sign(this.path[this.destination][0]-c[0]) != Math.sign(this.dir[0])
@@ -263,7 +264,7 @@ ol_Sprite.prototype.move = function (e) {
               }
             }
           }
-          
+
           // New position on end of the segment
           this.setCoordinate (this.path[this.destination-1]);
           this.angle = Math.atan2(this.path[this.destination][0]-this.path[this.destination-1][0], this.path[this.destination][1]-this.path[this.destination-1][1]);
