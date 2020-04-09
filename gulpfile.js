@@ -62,7 +62,7 @@ function transform() {
 // Retrieve option (--debug for css)
 var name = "ol-games";
 
-// using data from package.json 
+// using data from package.json
 var pkg = require('./package.json');
 var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
@@ -75,7 +75,7 @@ var banner = ['/**',
   ''].join('\n');
 
 // Build css. Use --debug to build in debug mode
-gulp.task('css', function () {
+gulp.task('css', function (done) {
   var css = [
     "./control/*.css",
     "./feature/*.css",
@@ -83,7 +83,7 @@ gulp.task('css', function () {
     "./game/*.css",
     "./graph/*.css",
     "./media/*.css",
-    "./style/*.css", 
+    "./style/*.css",
     "./utils/*.css"
   ];
   gulp.src(css)
@@ -96,10 +96,12 @@ gulp.task('css', function () {
   .pipe(concat(name+'.min.css'))
   .pipe(cssmin())
   .pipe(gulp.dest('./dist'));
+
+  done();
 });
 
 // Build js
-gulp.task("js", function() {
+gulp.task("js", function(done) {
   gulp.src([
     "./control/*.js",
     "./feature/*.js",
@@ -108,21 +110,23 @@ gulp.task("js", function() {
     "./graph/graph.js","./graph/*.js",
     "./media/Media.js", "./media/*.js",
     "./source/*.js",
-    "./style/*.js", 
-    "./utils/*.js"
-  ])
+    "./style/*.js",
+    "./utils/*.js",
+  ], { allowEmpty: true })
   .pipe(transform())
   .pipe(concat(name+".js"))
   .pipe(minify(
-    {	ext: { 
-        src:".js", 
-        min:".min.js" 
+    {	ext: {
+        src:".js",
+        min:".min.js"
       }
     }))
   .on('error', swallowError)
   .pipe(header(banner, { pkg : pkg } ))
   .pipe(gulp.dest("dist"))
   .on('end', function(){ console.log('\x1b[32m','\n>>> Terminated...','\x1b[0m')});
+
+  done();
 });
 
 /* Watch for modification to recreate the dist */
@@ -161,7 +165,7 @@ gulp.task('doc', function (cb) {
 });
 
 // build the dist
-gulp.task("dist", ["js","css"]);
+gulp.task("dist", gulp.parallel("js", "css"));
 
 // The default task that will be run if no task is supplied
-gulp.task("default", ["js","css"]);
+gulp.task("default", gulp.parallel("js", "css"));
