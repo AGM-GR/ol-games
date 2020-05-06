@@ -26,7 +26,8 @@ var ol_style_Sprite = function (options) {
     img: canvas,
     imgSize: [this.size, this.size],
     opacity: options.opacity,
-    scale: options.scale
+    scale: options.scale,
+    rotateWithView: options.rotateWithView || false
   });
 
   this.offset = [0,0];
